@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Package } from "lucide-react";
 
@@ -29,11 +30,20 @@ export const Navigation = () => {
           
           {/* CTA Buttons */}
           <div className="flex items-center gap-4">
-            <Button variant="ghost" className="hidden sm:inline-flex">
-              Sign In
-            </Button>
-            <Button variant="hero">
-              Get Started
+            <select 
+              className="hidden sm:inline-flex h-10 px-3 rounded-md border border-input bg-background text-sm font-medium hover:bg-accent transition-colors cursor-pointer"
+              onChange={(e) => {
+                if (e.target.value) window.location.href = e.target.value;
+              }}
+              defaultValue=""
+            >
+              <option value="" disabled>Select Portal</option>
+              <option value="/buyer">Buyer Portal</option>
+              <option value="/freight">Freight Portal</option>
+              <option value="/admin">Admin Portal</option>
+            </select>
+            <Button variant="hero" asChild>
+              <Link to="/buyer">Get Started</Link>
             </Button>
           </div>
         </div>
