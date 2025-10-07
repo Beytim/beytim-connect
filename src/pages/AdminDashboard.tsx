@@ -1,11 +1,19 @@
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Package, AlertCircle, Truck, DollarSign, Users, Building2 } from "lucide-react";
+import { Package, AlertCircle, Truck, DollarSign, Users, Building2, BarChart3 } from "lucide-react";
 import { SupplierManagement } from "@/components/admin/SupplierManagement";
+import { OrderAssignment } from "@/components/admin/OrderAssignment";
+import { PaymentProcessing } from "@/components/admin/PaymentProcessing";
+import { UserManagement } from "@/components/admin/UserManagement";
+import { AnalyticsDashboard } from "@/components/analytics/AnalyticsDashboard";
 
 const AdminDashboard = () => {
   const [showSuppliers, setShowSuppliers] = useState(false);
+  const [showOrderAssignment, setShowOrderAssignment] = useState<string | null>(null);
+  const [showPayments, setShowPayments] = useState(false);
+  const [showUsers, setShowUsers] = useState(false);
+  const [showAnalytics, setShowAnalytics] = useState(false);
 
   const stats = [
     { label: "Total Orders", value: "156", icon: Package, color: "text-primary" },
@@ -22,6 +30,22 @@ const AdminDashboard = () => {
 
   if (showSuppliers) {
     return <SupplierManagement onBack={() => setShowSuppliers(false)} />;
+  }
+
+  if (showOrderAssignment) {
+    return <OrderAssignment orderId={showOrderAssignment} onBack={() => setShowOrderAssignment(null)} />;
+  }
+
+  if (showPayments) {
+    return <PaymentProcessing onBack={() => setShowPayments(false)} />;
+  }
+
+  if (showUsers) {
+    return <UserManagement onBack={() => setShowUsers(false)} />;
+  }
+
+  if (showAnalytics) {
+    return <AnalyticsDashboard />;
   }
 
   return (
@@ -72,9 +96,19 @@ const AdminDashboard = () => {
           <h2 className="text-xl font-bold mb-4">Alerts</h2>
           <div className="space-y-3">
             {alerts.map((alert, index) => (
-              <div key={index} className="flex items-center gap-3 p-3 rounded-lg border border-border">
-                <AlertCircle className={`w-5 h-5 ${alert.color}`} />
-                <p className={`font-medium ${alert.color}`}>{alert.message}</p>
+              <div 
+                key={index} 
+                className="flex items-center justify-between p-3 rounded-lg border border-border cursor-pointer hover:bg-muted/50"
+                onClick={() => {
+                  if (alert.type === 'urgent') setShowOrderAssignment('REQ001');
+                  if (alert.type === 'warning') setShowPayments(true);
+                }}
+              >
+                <div className="flex items-center gap-3">
+                  <AlertCircle className={`w-5 h-5 ${alert.color}`} />
+                  <p className={`font-medium ${alert.color}`}>{alert.message}</p>
+                </div>
+                <Button variant="ghost" size="sm">View</Button>
               </div>
             ))}
           </div>
@@ -82,7 +116,7 @@ const AdminDashboard = () => {
 
         {/* Quick Actions */}
         <div className="grid md:grid-cols-4 gap-4">
-          <Button variant="outline" className="h-24 flex flex-col gap-2">
+          <Button variant="outline" className="h-24 flex flex-col gap-2" onClick={() => setShowUsers(true)}>
             <Users className="w-6 h-6" />
             <span>Manage Users</span>
           </Button>
@@ -90,11 +124,11 @@ const AdminDashboard = () => {
             <Building2 className="w-6 h-6" />
             <span>Suppliers</span>
           </Button>
-          <Button variant="outline" className="h-24 flex flex-col gap-2">
-            <Truck className="w-6 h-6" />
-            <span>Fleet</span>
+          <Button variant="outline" className="h-24 flex flex-col gap-2" onClick={() => setShowAnalytics(true)}>
+            <BarChart3 className="w-6 h-6" />
+            <span>Analytics</span>
           </Button>
-          <Button variant="outline" className="h-24 flex flex-col gap-2">
+          <Button variant="outline" className="h-24 flex flex-col gap-2" onClick={() => setShowPayments(true)}>
             <DollarSign className="w-6 h-6" />
             <span>Payments</span>
           </Button>

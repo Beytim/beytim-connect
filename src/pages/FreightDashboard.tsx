@@ -1,11 +1,15 @@
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Truck, DollarSign, Star, TrendingUp, Plus } from "lucide-react";
+import { Truck, DollarSign, Star, TrendingUp, Plus, BarChart3 } from "lucide-react";
 import { FleetManagement } from "@/components/freight/FleetManagement";
+import { ShipmentStatusUpdate } from "@/components/freight/ShipmentStatusUpdate";
+import { FleetAnalytics } from "@/components/freight/FleetAnalytics";
 
 const FreightDashboard = () => {
   const [showFleet, setShowFleet] = useState(false);
+  const [showShipmentUpdate, setShowShipmentUpdate] = useState<string | null>(null);
+  const [showAnalytics, setShowAnalytics] = useState(false);
 
   const stats = [
     { label: "Active Shipments", value: "3", icon: Truck, color: "text-primary" },
@@ -22,6 +26,14 @@ const FreightDashboard = () => {
 
   if (showFleet) {
     return <FleetManagement onBack={() => setShowFleet(false)} />;
+  }
+
+  if (showShipmentUpdate) {
+    return <ShipmentStatusUpdate shipmentId={showShipmentUpdate} onBack={() => setShowShipmentUpdate(null)} />;
+  }
+
+  if (showAnalytics) {
+    return <FleetAnalytics onBack={() => setShowAnalytics(false)} />;
   }
 
   return (
@@ -92,7 +104,7 @@ const FreightDashboard = () => {
                     </p>
                   </div>
                 </div>
-                <Button variant="outline" size="sm">
+                <Button variant="outline" size="sm" onClick={() => setShowShipmentUpdate(shipment.id)}>
                   Update
                 </Button>
               </div>
@@ -102,7 +114,8 @@ const FreightDashboard = () => {
 
         {/* Analytics Button */}
         <div className="mt-6">
-          <Button variant="outline" className="w-full">
+          <Button variant="outline" className="w-full" onClick={() => setShowAnalytics(true)}>
+            <BarChart3 className="w-4 h-4 mr-2" />
             View Analytics
           </Button>
         </div>

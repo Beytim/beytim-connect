@@ -1,13 +1,17 @@
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Package, Truck, Clock, CheckCircle2, Plus, FileText, Phone } from "lucide-react";
+import { Package, Truck, Clock, CheckCircle2, Plus, FileText, Phone, Edit } from "lucide-react";
 import { CreateRequestForm } from "@/components/buyer/CreateRequestForm";
 import { OrderTemplates } from "@/components/buyer/OrderTemplates";
+import { OrderModificationForm } from "@/components/buyer/OrderModificationForm";
+import { SupportTicketing } from "@/components/support/SupportTicketing";
 
 const BuyerDashboard = () => {
   const [showCreateRequest, setShowCreateRequest] = useState(false);
   const [showTemplates, setShowTemplates] = useState(false);
+  const [showModifyForm, setShowModifyForm] = useState<string | null>(null);
+  const [showSupport, setShowSupport] = useState(false);
 
   const stats = [
     { label: "Total Requests", value: "25", icon: Package, color: "text-primary" },
@@ -28,6 +32,14 @@ const BuyerDashboard = () => {
 
   if (showTemplates) {
     return <OrderTemplates onBack={() => setShowTemplates(false)} />;
+  }
+
+  if (showModifyForm) {
+    return <OrderModificationForm orderId={showModifyForm} onBack={() => setShowModifyForm(null)} />;
+  }
+
+  if (showSupport) {
+    return <SupportTicketing />;
   }
 
   return (
@@ -107,7 +119,11 @@ const BuyerDashboard = () => {
                     {request.location} • {request.date}
                   </p>
                 </div>
-                <Button variant="outline" size="sm">
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => request.action === "Modify" ? setShowModifyForm(request.id) : null}
+                >
                   {request.action}
                 </Button>
               </div>
@@ -117,7 +133,7 @@ const BuyerDashboard = () => {
 
         {/* Quick Actions */}
         <div className="mt-6 flex gap-4">
-          <Button variant="outline" className="flex-1">
+          <Button variant="outline" className="flex-1" onClick={() => setShowSupport(true)}>
             <Phone className="w-4 h-4" />
             Contact Support
           </Button>
